@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Our Wedding Invitation</title>
+<style>
+:root {
+  --wine:#541b35;
+  --dark:#210d19;
+  --gold:#d5b16d;
+  --cream:#fff8ed;
+  --green:#597b6b;
+  --pink:#e9c5ce;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--cream); color:#38272e;
+  font-family:Georgia,serif;
+}
+button { cursor:pointer; font:inherit; }
+.cover {
+  min-height:100vh; display:grid; place-items:center;
+  padding:28px; text-align:center; color:var(--cream);
+  background:radial-gradient(circle at top,#79503f,transparent 45%),
+    linear-gradient(145deg,var(--dark),var(--wine),var(--green));
+}
+.frame { border:1px solid var(--gold); padding:35px 22px;
+  width:min(100%,620px); outline:1px solid #d5b16d88; outline-offset:7px; }
+.eyebrow { text-transform:uppercase; letter-spacing:4px;
+  color:var(--gold); font:11px Arial,sans-serif; }
+h1 { font-weight:normal; font-size:clamp(42px,9vw,76px); line-height:1.1; }
+h1 span { display:block; font-size:.48em; font-style:italic; margin:12px; }
+button {
+  background:var(--gold); color:var(--dark); border:1px solid var(--gold);
+  padding:14px 23px; letter-spacing:1px; text-transform:uppercase;
+}
+.hero { text-align:center; padding:65px 18px; color:var(--cream);
+  background:linear-gradient(135deg,var(--dark),var(--wine),var(--green)); }
+.hero h2 { font-size:clamp(38px,8vw,65px); font-weight:normal; }
+.hero h2 span { color:var(--gold); }
+.section { max-width:1000px; margin:auto; padding:55px 18px; }
+.heading { text-align:center; margin-bottom:30px; }
+.heading h2 { color:var(--wine); font-size:36px; font-weight:normal; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; }
+.card { text-align:center; background:#fffdf7; border:1px solid #e1d0b0; padding:24px 18px; }
+.card h3 { font-size:25px; font-weight:normal; color:var(--wine); }
+.card p { white-space:pre-line; line-height:1.8; }
+.card a { color:var(--wine); }
+.countdown { text-align:center; background:#f0e3d0; padding:35px 12px; }
+.timer { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
+.unit { padding:14px; min-width:72px; border:1px solid var(--gold); background:#fffaf0; }
+.unit strong { display:block; font-size:27px; color:var(--wine); }
+.unit span { font:10px Arial,sans-serif; text-transform:uppercase; }
+.gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+.gallery figure { margin:0; padding:8px; background:white; border:1px solid #e1d0b0; }
+.gallery img { width:100%; height:280px; object-fit:cover; }
+.gallery figcaption { text-align:center; padding:8px; font-style:italic; }
+.gallery .photo-help { min-height:150px; display:grid; place-items:center; text-align:center;
+  padding:18px; color:#6c5260; background:#fff8ed; font:14px Arial,sans-serif; }
+.gallery img { display:block; }
+.venue { background:var(--green); color:var(--cream); padding:38px 18px; text-align:center; }
+.venue h2 { color:var(--gold); font-weight:normal; font-size:32px; }
+.venue a { display:inline-block; margin:10px; color:var(--gold); }
+.closing { text-align:center; padding:60px 18px; color:var(--cream); background:var(--dark); }
+.closing h2 { color:var(--gold); font-weight:normal; font-size:38px; }
+#musicButton { display:none; position:fixed; right:12px; bottom:12px;
+  border-radius:28px; z-index:3; }
+#invitation { display:none; }
+</style>
+</head>
+<body>
+
+<section class="cover" id="cover">
+  <div class="frame">
+    <div class="eyebrow">Together with our families</div>
+    <p>We invite you to celebrate the beginning of our forever</p>
+    <h1><span id="coverBride">Bride's Name</span>&<span id="coverGroom">Groom's Name</span></h1>
+    <p id="coverDate">Wedding Date</p>
+    <button id="openButton">Open Invitation ✨</button>
+    <p><small>Tap to open the invitation and start the music</small></p>
+  </div>
+</section>
+
+<main id="invitation">
+  <header class="hero">
+    <div class="eyebrow">A celebration of love</div>
+    <h2><span id="heroBride">Bride's Name</span><br>&<br>
+      <span id="heroGroom">Groom's Name</span></h2>
+    <p id="heroDate"></p>
+    <p>With joyful hearts, we invite you to our special celebration.</p>
+  </header>
+
+  <section class="section">
+    <div class="heading"><div class="eyebrow">The celebrations</div>
+      <h2>Wedding Functions</h2>
+      <p>Every moment is more beautiful when shared with loved ones.</p>
+    </div>
+    <div class="grid" id="functions"></div>
+  </section>
+
+  <section class="countdown">
+    <h2>Counting Down to Forever</h2>
+    <div class="timer">
+      <div class="unit"><strong id="days">--</strong><span>Days</span></div>
+      <div class="unit"><strong id="hours">--</strong><span>Hours</span></div>
+      <div class="unit"><strong id="minutes">--</strong><span>Minutes</span></div>
+      <div class="unit"><strong id="seconds">--</strong><span>Seconds</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="heading"><h2>Our Photo Gallery</h2>
+      <p>Add your favourite photographs in the settings below.</p>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section class="venue">
+    <div class="eyebrow">Find your way</div>
+    <h2>Join Our Celebration</h2>
+    <p id="venueName"></p>
+    <p id="venueAddress"></p>
+    <a id="mapLink" href="https://maps.google.com/" target="_blank" rel="noopener">View on Google Maps ↗</a>
+  </section>
+
+  <section class="section">
+    <div class="heading"><h2>Our Families</h2>
+      <p>Two families, one beautiful beginning.</p>
+    </div>
+    <div class="grid">
+      <article class="card"><h3 id="brideFamilyTitle">Bride's Family</h3>
+        <p id="brideFamily"></p></article>
+      <article class="card"><h3 id="groomFamilyTitle">Groom's Family</h3>
+        <p id="groomFamily"></p></article>
+    </div>
+  </section>
+
+  <footer class="closing">
+    <div class="eyebrow">With love</div>
+    <h2>We can't wait to celebrate with you</h2>
+    <p>Your presence will make our happiest moments even more memorable.</p>
+    <p id="closingNames"></p>
+    <p id="closingDate"></p>
+    <p id="contact"></p>
+  </footer>
+</main>
+
+<button id="musicButton">♫ Pause Music</button>
+<audio id="music" loop preload="auto"></audio>
+
+<script>
+/* ============== EDIT YOUR DETAILS HERE ============== */
+const WEDDING = {
+  bride: "Udita",
+  groom: "Abhinav",
+  date: "21 November 2026",
+  // Format: YYYY-MM-DDTHH:MM:SS (24-hour clock)
+  countdown: "2026-11-21T18:00:00",
+
+  // Put the MP3 file beside this HTML file.
+  music: "https://videotourl.com/audio/1793071025596-9f2926d3-b9c2-4284-a83f-fba4a21e3541.mp3",
+
+  venue: "Sanskar Vatika",
+  address: "Sanskar Vatika, Manduadih, Varanasi, 221103",
+  map: "https://maps.app.goo.gl/6jR9wnKsY1Fp7nGn6",
+
+  brideFamilyTitle: "Bride's Family",
+  brideFamily: "Daughter of NISHA VERMA & UMESH VERMA\nGrand Daughter of RAM DULARI VERMA & LATE KANHAIYA LAL VERMA\nSiblings AJITA VERMA & SHIVANSH VERMA",
+  groomFamilyTitle: "Groom's Family",
+  groomFamily: "Son of NUTAN MAURYA & MUL CHANDRA\nGrand Son of LATE DHARMA DEVI & LATE RAM SARAN\nSiblings AVINASH MAURYA",
+  contact: "Contact: UMESH VERMA 9424908448",
+
+  functions: [
+    {
+      name:"Haldi", date:"19-11-2026", time:"10:00",
+      venue:"Plot No. 74 St. Johns Colony", address:"Plot No. 74 St. Johns Colony, near St. Johns School, Marhauli,Varanasi, 221108",
+      map:"https://maps.app.goo.gl/xmGxFWVNXBfZwTps7",
+      note:"Join us for sunshine, turmeric and happy memories."
+    },
+    {
+      name:"Mehandi", date:"20-11-2026", time:"19:00",
+      venue:"Plot No. 74 St. Johns Colony", address:"Plot No.74 St. Johns Colony, near St. Johns School,Marhauli,Varanasi 221108",
+      map:"https://maps.app.goo.gl/xmGxFWVNXBfZwTps7",
+      note:"A day of colour, laughter and beautiful traditions."
+    },
+    {
+      name:"Wedding", date:"21 November 2026", time:"Add time",
+      venue:"Sanskar Vatika", address:"Sanskar Vatika, Manduadih,Varanasi,221103",
+      map:"https://maps.app.goo.gl/6jR9wnKsY1Fp7nGn6",
+      note:"Together with our families, we begin our forever."
+    }
+    // Copy an event above and add a comma to create Sangeet,
+    // Engagement, Vidai, or any other function.
+  ],
+
+  photos: [
+    // Paste a DIRECT image URL between the quotes for each photo.
+    // Example: {src:"https://example.com/my-photo.jpg", caption:"A favourite memory"}
+    {src:"https://cdn.phototourl.com/member/2026-10-27-042952ff-52ad-40e2-a2d7-691361cec379.jpg", caption:"A favourite memory"},
+    {src:"https://cdn.phototourl.com/member/2026-10-27-fb7680c8-8a4a-4118-96ea-00236a848169.png", caption:"Our story"},
+    {src:"https://cdn.phototourl.com/member/2026-10-27-2f58acf9-99b9-4462-bd76-4dcd9439007c.png", caption:"Together, always"}
+  ]
+};
+/* ============ END OF EDITABLE DETAILS ============ */
+
+const $ = id => document.getElementById(id);
+function text(id,value) { $(id).textContent = value ?? ""; }
+
+function renderFunctions() {
+  const root = $("functions");
+  root.replaceChildren();
+  WEDDING.functions.forEach(fn => {
+    const card = document.createElement("article");
+    card.className = "card";
+    const title = document.createElement("h3");
+    title.textContent = fn.name;
+    const details = document.createElement("p");
+    details.textContent = [fn.date,fn.time,fn.venue,fn.address].join("\n");
+    const note = document.createElement("p");
+    note.textContent = fn.note || "";
+    card.append(title,details,note);
+    if (fn.map) {
+      const a = document.createElement("a");
+      a.href = fn.map; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = "View function map ↗";
+      card.append(a);
+    }
+    root.append(card);
+  });
+}
+function renderPhotos() {
+  const root = $("gallery");
+  root.replaceChildren();
+  WEDDING.photos.forEach(photo => {
+    const figure = document.createElement("figure");
+    const caption = document.createElement("figcaption");
+    caption.textContent = photo.caption || "";
+
+    const src = (photo.src || "").trim();
+    if (!src || src === "PASTE_DIRECT_IMAGE_URL_HERE") {
+      const help = document.createElement("div");
+      help.className = "photo-help";
+      help.textContent = "Add a direct photo URL in WEDDING.photos to show your image here.";
+      figure.append(help, caption);
+    } else {
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = photo.caption || "Wedding photo";
+      img.loading = "lazy";
+      img.onerror = () => {
+        const help = document.createElement("div");
+        help.className = "photo-help";
+        help.textContent = "This photo could not load. Check that the URL opens the image directly and is publicly accessible.";
+        img.replaceWith(help);
+      };
+      figure.append(img, caption);
+    }
+    root.append(figure);
+  });
+}
+function setup() {
+  text("coverBride",WEDDING.bride); text("heroBride",WEDDING.bride);
+  text("coverGroom",WEDDING.groom); text("heroGroom",WEDDING.groom);
+  ["coverDate","heroDate","closingDate"].forEach(id=>text(id,WEDDING.date));
+  text("closingNames",WEDDING.bride+" & "+WEDDING.groom);
+  text("venueName",WEDDING.venue); text("venueAddress",WEDDING.address);
+  $("mapLink").href = WEDDING.map || "https://maps.google.com/";
+  text("brideFamilyTitle",WEDDING.brideFamilyTitle);
+  text("brideFamily",WEDDING.brideFamily);
+  text("groomFamilyTitle",WEDDING.groomFamilyTitle);
+  text("groomFamily",WEDDING.groomFamily);
+  text("contact",WEDDING.contact);
+  $("music").src = WEDDING.music || "";
+  renderFunctions(); renderPhotos();
+}
+function updateCountdown() {
+  let difference = new Date(WEDDING.countdown).getTime()-Date.now();
+  if (!Number.isFinite(difference) || difference <= 0) {
+    ["days","hours","minutes","seconds"].forEach(id=>text(id,"00"));
+    return;
+  }
+  const days = Math.floor(difference/86400000); difference %= 86400000;
+  const hours = Math.floor(difference/3600000); difference %= 3600000;
+  const minutes = Math.floor(difference/60000); difference %= 60000;
+  const seconds = Math.floor(difference/1000);
+  text("days",days); text("hours",String(hours).padStart(2,"0"));
+  text("minutes",String(minutes).padStart(2,"0"));
+  text("seconds",String(seconds).padStart(2,"0"));
+}
+const music = $("music");
+$("openButton").addEventListener("click", async () => {
+  $("cover").style.display="none";
+  $("invitation").style.display="block";
+  $("musicButton").style.display="block";
+  window.scrollTo(0,0);
+  if (!WEDDING.music) {
+    $("musicButton").textContent="♫ Add music file";
+    return;
+  }
+  try {
+    await music.play();
+    $("musicButton").textContent="♫ Pause Music";
+  } catch {
+    $("musicButton").textContent="♫ Tap to Play Music";
+  }
+});
+$("musicButton").addEventListener("click",async()=>{
+  if (!WEDDING.music) {
+    alert("Set WEDDING.music to your MP3 filename first.");
+    return;
+  }
+  if (music.paused) {
+    try { await music.play(); $("musicButton").textContent="♫ Pause Music"; }
+    catch { $("musicButton").textContent="♫ Tap to Play Music"; }
+  } else {
+    music.pause(); $("musicButton").textContent="♫ Play Music";
+  }
+});
+setup(); updateCountdown(); setInterval(updateCountdown,1000);
+</script>
+</body>
+</html>
+
